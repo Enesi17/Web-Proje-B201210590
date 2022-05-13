@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    background-color: whitesmoke;
+    color: goldenrod;
+    font-family: 'Ubuntu', sans-serif;
+}
+.header {
+    /* background-color: rgb(67, 164, 243); */
+    height: 10vh;
+    text-align: center;
+    grid-column: 1/13;
+}
+.main{
+    height: 120vh;
+    text-align: center;
+}
+.navbar-style{
+    box-shadow: 0 5px 10px #efefef;
+    text-transform: capitalize;
+}
+.logo{
+    height: 50px;
+    padding: 2px 12px;
+    position: relative;
+}
+.icon-bar{
+    background: rgb(37, 168, 208);
+}
+li a {
+    color: rgb(57, 62, 231);
+}
+p{
+    border-radius: 2px;
+    border-style: double;
+    border-color: goldenrod;
+}
+#title{
+    text-transform: uppercase;
+    text-decoration: underline goldenrod;
+    text-align: center;
+    padding-bottom: 5px;
+}
+.thumbnail{
+    background-color: gold;
+    text-align: center;
+    width: 395px;
+    height: 500px;
+}
+#footer{
+    color: goldenrod;
+    text-align: center;
+    text-decoration: underline goldenrod;
+}
+.caption{
+    background-color: gold;
+    margin: 2px;
+    padding: 2px;
+}
+h4{
+    padding: 2px;
+    background-color: gold;
+}
+hr{
+    color: rgb(35, 130, 193);
+}
