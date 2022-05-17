@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+<!-- saved from url=(0029)https://files.000webhost.com/ -->
+<html lang="en" data-ng-app="FileManagerApp" class="ng-scope"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>
+  <!--
+    * Angular FileManager v1.5.1 (https://github.com/joni2back/angular-filemanager)
+    * Jonas Sciangula Street <joni2back@gmail.com>
+    * Licensed under MIT (https://github.com/joni2back/angular-filemanager/blob/master/LICENSE)
+  -->
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  
+  <meta name="robots" content="noindex, nofollow">
+  <title>000webhost File Manager</title>
+
+  <!-- third party -->
+    <script src="./000webhost File Manager_files/angular.min.js.download"></script>
+    <script src="./000webhost File Manager_files/angular-translate.min.js.download"></script>
+    <script src="./000webhost File Manager_files/ng-file-upload.min.js.download"></script>
+    <script src="./000webhost File Manager_files/jquery.min.js.download"></script>
+    <script src="./000webhost File Manager_files/bootstrap.min.js.download"></script>
+    <script src="./000webhost File Manager_files/utf8.js.download"></script>
+    <link rel="stylesheet" href="./000webhost File Manager_files/bootstrap.min.css">
+    <script type="text/javascript" src="./000webhost File Manager_files/ace.js.download"></script>
+    <script type="text/javascript" src="./000webhost File Manager_files/ui-ace.js.download"></script>
+    <script type="text/javascript" src="./000webhost File Manager_files/ext-language_tools.js.download"></script>
+    <script type="text/javascript" src="./000webhost File Manager_files/ext-modelist.js.download"></script>
+  <!-- /third party -->
+
+  <!-- Comment if you need to use raw source code -->
+    <link href="./000webhost File Manager_files/angular-filemanager.min.css" rel="stylesheet">
+    <script src="./000webhost File Manager_files/angular-filemanager.min.js.download"></script>
+  <!-- /Comment if you need to use raw source code -->
+
+  <script type="text/javascript">
+    //example to override angular-filemanager default config
+    angular.module('FileManagerApp').config(['fileManagerConfigProvider', function (config) {
+      var defaults = config.$get();
+      config.set({
+        appName: 'File Manager',
+        theme: ('000webhost').toLocaleLowerCase(),
+        pickCallback: function(item) {
+          var msg = 'Picked %s "%s" for external use'
+            .replace('%s', item.type)
+            .replace('%s', item.fullPath());
+          window.alert(msg);
+        },
+
+        allowedActions: angular.extend(defaults.allowedActions, {
+          pickFiles: false,
+          pickFolders: false,
+        }),
+      });
+    }]);
+  </script>
+</head>
+
+<body class="">
+  <div class="user-container container-fluid ng-scope" ng-controller="UserController as user">
+    <!-- ngIf: user.status && user.loading == 0 --><angular-filemanager ng-if="user.status &amp;&amp; user.loading == 0" class="ng-scope"><div ng-controller="FileManagerCtrl" ngf-drop="addForUpload($files)" ngf-drag-over-class="&#39;upload-dragover&#39;" ngf-multiple="true" class="file-manager-container ng-scope">
+    <!-- ngInclude: config.tplPath + '/navbar.html' --><div ng-include="config.tplPath + &#39;/navbar.html&#39;" class="ng-scope"><nav class="navbar navbar-inverse ng-scope">
+    <div class="container-fluid">
+
+        <div class="row visible-xs" style="line-height:30px;">
+            <div class="col-md-4">
+                <div class="navbar-header" style="float:left">
+                    <button type="button" id="header-menu-button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="pull-left" style="line-height: 54px;" ng-show="&#39;000webhost&#39; == config.theme"><img class="logo" src="./000webhost File Manager_files/logo.png" alt="logo" title="000webhost" height="34px"></div>
+                <div class="pull-right text-sm">
+                    <!-- ngInclude: config.tplPath + '/current-folder-breadcrumb.html' --><div ng-include="config.tplPath + &#39;/current-folder-breadcrumb.html&#39;" ng-show="config.breadcrumb" class="ng-scope"><ol class="breadcrumb ng-scope">
+    <li>
+        <a href="https://files.000webhost.com/" ng-click="fileNavigator.goTo(-1)" class="ng-binding">
+            mykosova
+        </a>
+    </li>
+    <!-- ngRepeat: (key, dir) in fileNavigator.currentPath track by key -->
+</ol></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="top-action">
+            <div class="hidden-xs top-action__breadcrumbs flex">
+                <img class="pull-left logo webhost-logo" src="./000webhost File Manager_files/000-logo-white.svg" alt="logo" title="000webhost" ng-show="&#39;000webhost&#39; == config.theme">
+                <div ng-show="!config.breadcrumb" class="ng-hide">
+                    <a class="navbar-brand hidden-xs ng-binding" href="https://files.000webhost.com/">angular-filemanager</a>
+                </div>
+                <!-- ngInclude: config.tplPath + '/current-folder-breadcrumb.html' --><div ng-include="config.tplPath + &#39;/current-folder-breadcrumb.html&#39;" ng-show="config.breadcrumb" class="ng-scope"><ol class="breadcrumb ng-scope">
+    <li>
+        <a href="https://files.000webhost.com/" ng-click="fileNavigator.goTo(-1)" class="ng-binding">
+            mykosova
+        </a>
+    </li>
+    <!-- ngRepeat: (key, dir) in fileNavigator.currentPath track by key -->
+</ol></div>
+            </div>
+            <div class="flex flex-1 ml-20 flex-align-center" ng-show="&#39;000webhost&#39; == config.theme">
+                <a class="upgrade-btn upgrade-btn--white text-bolt flex flex-align-center ng-binding" rel="noopener noreferrer" href="https://www.hostinger.com/hosting-starter-offer?utm_source=000webhost&amp;utm_medium=file-manager&amp;utm_campaign=000-file-manager-header" target="_blank">Go Premium</a>
+            </div>
+            <div class="top-action__main-actions-container">
+                <div ng-show="true || temps.length &gt; 1" class="top-action-meniu">
+                    <!-- ngInclude: config.tplPath + '/action-meniu.html' --><ul class="top-action-meniu__list navbar-form navbar-right  ng-scope" role="menu" aria-labelledby="dropdownMenu" ng-include="config.tplPath + &#39;/action-meniu.html&#39;"><li class="btn-flat ng-scope ng-hide" ng-hide="! singleSelection() &amp;&amp; ! singleSelection().isFolder()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; smartClick(singleSelection())" class="disabled">
+        <i class="glyphicon glyphicon-folder-open"></i> <div class="ng-binding"> Open </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.pickCallback &amp;&amp; singleSelection() &amp;&amp; singleSelection().isSelectable()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; config.pickCallback(singleSelection().model)" class="disabled">
+        <i class="glyphicon glyphicon-hand-up"></i> <div class="ng-binding"> Select this </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.download &amp;&amp; !selectionHas(&#39;dir&#39;) &amp;&amp; !selectionHasSymlink() &amp;&amp; singleSelection()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; download()" class="disabled">
+        <i class="glyphicon glyphicon-cloud-download"></i> <div class="ng-binding"> Download </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.downloadMultiple &amp;&amp; !selectionHas(&#39;dir&#39;) &amp;&amp; !singleSelection()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; download()" class="disabled">
+        <i class="glyphicon glyphicon-cloud-download"></i> <div class="ng-binding"> Download as ZIP </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.preview &amp;&amp; singleSelection().isImage() &amp;&amp; singleSelection()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; openImagePreview()" class="disabled">
+        <i class="glyphicon glyphicon-picture"></i> <div class="ng-binding"> Preview </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="singleSelection() &amp;&amp; canOpenInNewTab() &amp;&amp; &#39;000webhost&#39; == config.theme">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; openInNewTab()" class="disabled">
+        <i class="glyphicon glyphicon-file"></i> <div class="ng-binding"> View </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.rename &amp;&amp; singleSelection()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modal(&#39;rename&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-edit"></i> <div class="ng-binding"> Rename </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope" ng-show="config.allowedActions.move">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modalWithPathSelector(&#39;move&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-arrow-right"></i> <div class="ng-binding"> Move </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope" ng-show="config.allowedActions.copy">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modalWithPathSelector(&#39;copy&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-log-out"></i> <div class="ng-binding"> Copy </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.edit &amp;&amp; singleSelection() &amp;&amp; singleSelection().isEditable()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; openEditItem()" class="disabled">
+        <i class="glyphicon glyphicon-pencil"></i> <div class="ng-binding"> Edit </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope" ng-show="config.allowedActions.changePermissions">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; selected() &amp;&amp; modal(&#39;changepermissions&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-lock"></i> <div class="ng-binding"> Permissions </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope" ng-show="config.allowedActions.compress">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modal(&#39;compress&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-compressed"></i> <div class="ng-binding"> Compress </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.extract &amp;&amp; singleSelection() &amp;&amp; singleSelection().isExtractable()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modal(&#39;extract&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-export"></i> <div class="ng-binding"> Extract </div>
+    </a>
+</li>
+
+<!--<li class="btn-flat" class="divider" ng-show="config.allowedActions.remove"></li>-->
+
+<li class="btn-flat ng-scope" ng-show="config.allowedActions.remove">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modal(&#39;remove&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-trash"></i> <div class="ng-binding"> Delete </div>
+    </a>
+</li>
+</ul>
+                    <div class="action-separation-container">
+                        <div class="action-separation"></div>
+                    </div>
+                </div>
+                <div class="navbar-collapse top-action__main-actions">
+                    <ul class="navbar-form navbar-right text-right action-meniu__list">
+                        <li class="btn btn-flat btn-sm" ng-show="config.allowedActions.createFile" ng-click="modal(&#39;newfile&#39;) &amp;&amp; prepareNewFile()" title="New File">
+                            <i class="glyphicon glyphicon-file"></i>
+                            <i class="glyphicon glyphicon-plus on-top-glyph-plus"></i>
+                            <div class="ng-binding"> New File</div>
+                        </li>
+                        <li class="btn btn-flat btn-sm" ng-show="config.allowedActions.createFolder" ng-click="modal(&#39;newfolder&#39;) &amp;&amp; prepareNewFolder()" title="New folder">
+                            <i class="glyphicon glyphicon-folder-open"></i>
+                            <i class="glyphicon glyphicon-plus on-top-glyph-plus"></i>
+                            <div class="ng-binding"> New folder</div>
+                        </li>
+
+                        <div class="btn-group">
+                            <li class="btn btn-flat btn-sm dropdown-toggle" type="button" id="dropDownMenuSearch" data-toggle="dropdown" aria-expanded="true">
+                                <i class="glyphicon glyphicon-search mr2"></i>
+                                <div class="ng-binding"> Search</div>
+                            </li>
+                            <div class="dropdown-menu animated fast fadeIn pull-right" role="menu" aria-labelledby="dropDownMenuLang">
+                                <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-show="config.searchForm" placeholder="Search..." ng-model="$parent.query">
+                            </div>
+                        </div>
+
+                        <li class="btn btn-flat btn-sm" ng-show="config.allowedActions.upload" ng-click="modal(&#39;uploadfiledialog&#39;)" title="Upload files">
+                            <i class="glyphicon glyphicon-cloud-upload"></i>
+                            <div class="ng-binding"> Upload files</div>
+                        </li>
+
+                        <li class="btn btn-flat btn-sm" ng-click="fileNavigator.refresh()" title="Reload File List">
+                            <i class="glyphicon glyphicon-refresh"></i>
+                            <div class="ng-binding"> refresh</div>
+                        </li>
+
+                        <li class="btn btn-flat btn-sm" ng-click="$parent.setTemplate(&#39;main-icons.html&#39;)" ng-show="$parent.viewTemplate !==&#39;main-icons.html&#39;" title="Icons">
+                            <i class="glyphicon glyphicon-th-large"></i>
+                            <div class="ng-binding"> Icons</div>
+                        </li>
+
+                        <li class="btn btn-flat btn-sm ng-hide" ng-click="$parent.setTemplate(&#39;main-table.html&#39;)" ng-show="$parent.viewTemplate !==&#39;main-table.html&#39;" title="List">
+                            <i class="glyphicon glyphicon-th-list"></i>
+                            <div class="ng-binding"> List</div>
+                        </li>
+
+                        <div class="btn-group">
+                            <li class="btn btn-flat btn-sm dropdown-toggle" type="button" id="dropDownMenuLang" data-toggle="dropdown" aria-expanded="true">
+                                <i class="glyphicon glyphicon-globe mr2"></i>
+                                <div class="ng-binding"> Language</div>
+                            </li>
+
+                            <ul id="language-selection" class="dropdown-menu scrollable-menu animated fast fadeIn pull-right" role="menu" aria-labelledby="dropDownMenuLang">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;en&#39;)" class="ng-binding">English</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;zh&#39;)" class="ng-binding">Chinese</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;es&#39;)" class="ng-binding">Spanish</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;pt&#39;)" class="ng-binding">Portuguese</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;fr&#39;)" class="ng-binding">French</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;de&#39;)" class="ng-binding">German</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;he&#39;)" class="ng-binding">Hebrew</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;sk&#39;)" class="ng-binding">Slovak</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;ru&#39;)" class="ng-binding">Russian</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;ua&#39;)" class="ng-binding">Ukrainian</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;tr&#39;)" class="ng-binding">Turkish</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;fa&#39;)" class="ng-binding">Persian</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://files.000webhost.com/" ng-click="changeLanguage(&#39;pl&#39;)" class="ng-binding">Polish</a></li>
+                            </ul>
+                        </div>
+
+
+                        <li class="btn btn-flat btn-sm" ng-click="$parent.logout()" title="Log out">
+                            <i class="glyphicon glyphicon-off"></i>
+                            <div class="ng-binding"> logout</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+</div>
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <!-- ngInclude: config.tplPath + '/sidebar.html' --><div class="col-sm-4 col-md-3 sidebar file-tree animated slow fadeIn ng-scope" id="left-sidebar-container" ng-include="config.tplPath + &#39;/sidebar.html&#39;" ng-show="config.sidebar &amp;&amp; fileNavigator.history[0]"><ul class="nav nav-sidebar file-tree-root ng-scope">
+    <!-- ngRepeat: item in fileNavigator.history --><!-- ngInclude: 'folder-branch-item' --><li ng-repeat="item in fileNavigator.history" ng-include="&#39;folder-branch-item&#39;" ng-class="{&#39;active&#39;: item.name == fileNavigator.currentPath.join(&#39;/&#39;)}" class="ng-scope active">
+    <a href="https://files.000webhost.com/" ng-click="item.item.isSymlink() ?  fileNavigator.symlinkClick(item.item) : fileNavigator.folderClick(item.item)" class="animated fast fadeInDown ng-binding ng-scope">
+
+        <span class="point">
+            <i class="glyphicon glyphicon-chevron-down" ng-show="isInThisPath(item.name)"></i>
+            <i class="glyphicon glyphicon-chevron-right ng-hide" ng-show="!isInThisPath(item.name)"></i>
+        </span>
+
+        <i class="glyphicon glyphicon-folder-open mr2" ng-show="isInThisPath(item.name)"></i>
+        <i class="glyphicon glyphicon-folder-close mr2 ng-hide" ng-show="!isInThisPath(item.name)"></i>
+        <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.item.isSymlink()"></i>
+        /
+    </a>
+    <ul class="nav nav-sidebar ng-scope">
+        <!-- ngRepeat: item in item.nodes --><!-- ngInclude: 'folder-branch-item' --><li ng-repeat="item in item.nodes" ng-include="&#39;folder-branch-item&#39;" ng-class="{&#39;active&#39;: item.name == fileNavigator.currentPath.join(&#39;/&#39;)}" class="ng-scope">
+    <a href="https://files.000webhost.com/" ng-click="item.item.isSymlink() ?  fileNavigator.symlinkClick(item.item) : fileNavigator.folderClick(item.item)" class="animated fast fadeInDown ng-binding ng-scope">
+
+        <span class="point">
+            <i class="glyphicon glyphicon-chevron-down ng-hide" ng-show="isInThisPath(item.name)"></i>
+            <i class="glyphicon glyphicon-chevron-right" ng-show="!isInThisPath(item.name)"></i>
+        </span>
+
+        <i class="glyphicon glyphicon-folder-open mr2 ng-hide" ng-show="isInThisPath(item.name)"></i>
+        <i class="glyphicon glyphicon-folder-close mr2" ng-show="!isInThisPath(item.name)"></i>
+        <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.item.isSymlink()"></i>
+        public_html
+    </a>
+    <ul class="nav nav-sidebar ng-scope">
+        <!-- ngRepeat: item in item.nodes -->
+    </ul>
+</li><!-- end ngRepeat: item in item.nodes --><!-- ngInclude: 'folder-branch-item' --><li ng-repeat="item in item.nodes" ng-include="&#39;folder-branch-item&#39;" ng-class="{&#39;active&#39;: item.name == fileNavigator.currentPath.join(&#39;/&#39;)}" class="ng-scope">
+    <a href="https://files.000webhost.com/" ng-click="item.item.isSymlink() ?  fileNavigator.symlinkClick(item.item) : fileNavigator.folderClick(item.item)" class="animated fast fadeInDown ng-binding ng-scope">
+
+        <span class="point">
+            <i class="glyphicon glyphicon-chevron-down ng-hide" ng-show="isInThisPath(item.name)"></i>
+            <i class="glyphicon glyphicon-chevron-right" ng-show="!isInThisPath(item.name)"></i>
+        </span>
+
+        <i class="glyphicon glyphicon-folder-open mr2 ng-hide" ng-show="isInThisPath(item.name)"></i>
+        <i class="glyphicon glyphicon-folder-close mr2" ng-show="!isInThisPath(item.name)"></i>
+        <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.item.isSymlink()"></i>
+        tmp
+    </a>
+    <ul class="nav nav-sidebar ng-scope">
+        <!-- ngRepeat: item in item.nodes -->
+    </ul>
+</li><!-- end ngRepeat: item in item.nodes -->
+    </ul>
+</li><!-- end ngRepeat: item in fileNavigator.history -->
+</ul>
+
+<script type="text/ng-template" id="folder-branch-item" class="ng-scope">
+    <a href=""
+       ng-click="item.item.isSymlink() ?  fileNavigator.symlinkClick(item.item) : fileNavigator.folderClick(item.item)"
+       class="animated fast fadeInDown">
+
+        <span class="point">
+            <i class="glyphicon glyphicon-chevron-down" ng-show="isInThisPath(item.name)"></i>
+            <i class="glyphicon glyphicon-chevron-right" ng-show="!isInThisPath(item.name)"></i>
+        </span>
+
+        <i class="glyphicon glyphicon-folder-open mr2" ng-show="isInThisPath(item.name)"></i>
+        <i class="glyphicon glyphicon-folder-close mr2" ng-show="!isInThisPath(item.name)"></i>
+        <i class="glyphicon glyphicon-link symlink" ng-show="item.item.isSymlink()"></i>
+        {{ (item.name.split('/').pop() || '/') | strLimit : 30 }}
+    </a>
+    <ul class="nav nav-sidebar">
+        <li ng-repeat="item in item.nodes" ng-include="'folder-branch-item'" ng-class="{'active': item.name == fileNavigator.currentPath.join('/')}"></li>
+    </ul>
+</script></div>
+
+            <div class="main col-sm-8 col-md-9" ng-class="config.sidebar &amp;&amp; fileNavigator.history[0] &amp;&amp; &#39;col-sm-8 col-md-9&#39;">
+                <!-- ngInclude: config.tplPath + '/' + viewTemplate --><div ng-include="config.tplPath + &#39;/&#39; + viewTemplate" class="clearfix ng-scope"><!-- ngIf: fileNavigator.errors --><div class="error ng-scope" ng-if="fileNavigator.errors">
+    <ul>
+        <!-- ngRepeat: err in fileNavigator.errors -->
+    </ul>
+</div><!-- end ngIf: fileNavigator.errors -->
+<table class="table mb0 table-files noselect ng-scope">
+    <thead>
+    <tr>
+        <th class="text-center">
+            <input class="file-select-all" type="checkbox" ng-checked="temps.length == $parent.fileList.length" ng-click="selectAll($parent.fileList)">
+        </th>
+        <th>
+            <a href="https://files.000webhost.com/" ng-click="order(&#39;model.name&#39;)" class="ng-binding">
+                Name
+                <span class="sortorder" ng-show="predicate[1] === &#39;model.name&#39;" ng-class="{reverse:reverse}"></span>
+            </a>
+        </th>
+        <th class="hidden-xs" ng-hide="config.hideSize">
+            <a href="https://files.000webhost.com/" ng-click="order(&#39;model.size&#39;)" class="ng-binding">
+                Size
+                <span class="sortorder ng-hide" ng-show="predicate[1] === &#39;model.size&#39;" ng-class="{reverse:reverse}"></span>
+            </a>
+        </th>
+        <th class="hidden-sm hidden-xs" ng-hide="config.hideDate">
+            <a href="https://files.000webhost.com/" ng-click="order(&#39;model.date&#39;)" class="ng-binding">
+                Date
+                <span class="sortorder ng-hide" ng-show="predicate[1] === &#39;model.date&#39;" ng-class="{reverse:reverse}"></span>
+            </a>
+        </th>
+        <th class="hidden-sm hidden-xs" ng-hide="config.hidePermissions">
+            <a href="https://files.000webhost.com/" ng-click="order(&#39;model.permissions&#39;)" class="ng-binding">
+                Permissions
+                <span class="sortorder ng-hide" ng-show="predicate[1] === &#39;model.permissions&#39;" ng-class="{reverse:reverse}"></span>
+            </a>
+        </th>
+    </tr>
+    </thead>
+    <tbody class="file-item">
+    <tr ng-show="fileNavigator.requesting" class="ng-hide">
+        <td colspan="5">
+            <!-- ngInclude: config.tplPath + '/spinner.html' --><div ng-include="config.tplPath + &#39;/spinner.html&#39;" class="ng-scope"><div class="spinner-wrapper col-xs-12 ng-scope">
+    <svg class="spinner-container" style="width:65px;height:65px" viewBox="0 0 44 44">
+        <circle class="path" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
+    </svg>
+</div></div>
+        </td>
+    </tr>
+    <tr ng-show="!fileNavigator.requesting &amp;&amp; fileNavigator.fileList.length &lt; 1 &amp;&amp; !fileNavigator.error" class="ng-hide">
+        <td colspan="5" class="ng-binding">
+            No files in this folder...
+        </td>
+    </tr>
+    <tr ng-show="!fileNavigator.requesting &amp;&amp; fileNavigator.error" class="ng-hide">
+        <td colspan="5" class="ng-binding">
+            
+        </td>
+    </tr>
+    <!-- ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="public_html (0.1  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file ng-hide" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                public_html 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding ng-hide">
+                    0.1  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:18:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            drwx--x---
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="tmp (0.1  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file ng-hide" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                tmp 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding ng-hide">
+                    0.1  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:18:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            drwx--x---
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Brezovica.jpg (206.5  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Brezovica.jpg 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    206.5  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="cv-img.JPG (119.8  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                cv-img.JPG 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    119.8  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="FR.jpg (40.2  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                FR.jpg 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    40.2  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="history-style.css (0.7  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                history-style.css 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    0.7  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="history.html (6.2  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                history.html 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    6.2  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Homepage_js.js (1.1  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Homepage_js.js 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    1.1  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Homepage_style.css (1.7  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Homepage_style.css 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    1.7  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Homepage.html (2.9  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Homepage.html 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    2.9  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="introduction_style.css (1.0  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                introduction_style.css 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    1.0  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="introduction.html (5.1  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                introduction.html 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    5.1  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Kombtarja.jpg (11.0  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Kombtarja.jpg 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    11.0  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Kos-info.jpg (8.6  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Kos-info.jpg 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    8.6  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Log-in_CV_Style.css (3.5  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Log-in_CV_Style.css 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    3.5  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="LogedIn_php.php (0.7  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                LogedIn_php.php 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    0.7  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Login_CV.html (11.8  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Login_CV.html 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    11.8  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="logo.png (19.1  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                logo.png 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    19.1  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="main_photo.jpg (6.5  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                main_photo.jpg 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    6.5  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="pr-logo.jpg (10.0  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                pr-logo.jpg 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    10.0  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="prishtina-style.css (1.3  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                prishtina-style.css 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    1.3  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="prishtina.html (9.2  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                prishtina.html 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    9.2  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Prizreni.jpg (162.8  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Prizreni.jpg 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    162.8  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="RKS_TR1.jpg (24.7  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                RKS_TR1.jpg 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    24.7  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="RKS.png (2.7  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                RKS.png 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    2.7  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Rugova.jpg (67.9  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Rugova.jpg 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    67.9  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="sau-logo.jpg (201.0  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                sau-logo.jpg 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    201.0  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:23:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="sport_style.css (1.2  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                sport_style.css 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    1.2  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Sport.html (8.2  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Sport.html 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    8.2  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Tourisim_js.js (0.8  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Tourisim_js.js 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    0.8  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Tourisim-style.css (2.0  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Tourisim-style.css 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    2.0  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) --><tr class="item-list ng-scope" ng-repeat="item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally)" ng-show="!fileNavigator.requesting" ng-dblclick="smartClick(item)" ng-right-click="selectOrUnselect(item, $event)" ng-class="{selected: isSelected(item)}">
+        <td class="text-center">
+            <input class="file-select" type="checkbox" ng-checked="isSelected(item)" ng-click="multipleSelect(item, $event)">
+        </td>
+        <td ng-click="singleSelect(item, $event)">
+            <a href="https://files.000webhost.com/" title="Tourisim.html (4.2  kB)" class="ng-binding">
+                <i class="glyphicon glyphicon-folder-close ng-hide" ng-show="item.model.type === &#39;dir&#39;"></i>
+                <i class="glyphicon glyphicon-file" ng-show="item.model.type === &#39;file&#39;"></i>
+                <i class="glyphicon glyphicon-link symlink ng-hide" ng-show="item.isSymlink()"></i>
+                Tourisim.html 
+            </a>
+        </td>
+        <td class="hidden-xs" ng-click="singleSelect(item, $event)">
+                <span ng-show="item.model.type !== &#39;dir&#39; || config.showSizeForDirectories" class="ng-binding">
+                    4.2  kB
+                </span>
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hideDate" ng-click="singleSelect(item, $event)">
+            2022-05-15 20:21:00
+        </td>
+        <td class="hidden-sm hidden-xs ng-binding" ng-hide="config.hidePermissions" ng-click="singleSelect(item, $event)">
+            -rw-r--r--
+        </td>
+    </tr><!-- end ngRepeat: item in $parent.fileList = (fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse:comparePredicatesNaturally) -->
+    </tbody>
+</table>
+</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ngInclude: config.tplPath + '/modals.html' --><div ng-include="config.tplPath + &#39;/modals.html&#39;" class="ng-scope"><div class="modal animated fadeIn ng-scope" id="imagepreview">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only ng-binding">Close</span>
+        </button>
+        <h4 class="modal-title ng-binding">Item preview</h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <img id="imagepreview-target" class="preview" alt="" ng-class="{&#39;loading&#39;: apiMiddleware.apiHandler.inprocess}">
+          <span class="label label-warning ng-binding ng-hide" ng-show="apiMiddleware.apiHandler.inprocess">Loading ...</span>
+        </div>
+        <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="remove">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form ng-submit="remove()" class="ng-pristine ng-valid">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only ng-binding">Close</span>
+        </button>
+        <h4 class="modal-title ng-binding">Confirm</h4>
+      </div>
+      <div class="modal-body ng-binding">
+        Are you sure to delete <!-- ngInclude: --><span ng-include="" data-src="&#39;selected-files-msg&#39;" class="ng-scope">
+  <span ng-show="temps.length == 1" class="ng-binding ng-scope ng-hide">
+    
+  </span>
+  <span ng-show="temps.length &gt; 1" class="ng-binding ng-scope ng-hide">
+    these 0 elements
+    <a href="https://files.000webhost.com/" class="label label-primary ng-binding" ng-click="showDetails = !showDetails">
+      + Details
+    </a>
+  </span>
+  <div ng-show="temps.length &gt; 1 &amp;&amp; showDetails" class="ng-scope ng-hide">
+    <ul class="selected-file-details">
+      <!-- ngRepeat: tempItem in temps -->
+    </ul>
+  </div>
+</span>
+
+        <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Cancel</button>
+        <button type="submit" class="btn btn-danger ng-binding" ng-disabled="apiMiddleware.apiHandler.inprocess" autofocus="autofocus">Delete</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="move">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form ng-submit="move()" class="ng-pristine ng-valid">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">×</span>
+                  <span class="sr-only ng-binding">Close</span>
+              </button>
+              <h4 class="modal-title ng-binding">Move</h4>
+            </div>
+            <div class="modal-body">
+              <!-- ngInclude: --><div ng-include="" data-src="&#39;path-selector&#39;" class="clearfix ng-scope">
+  <div class="panel panel-primary mt10 mb0 ng-scope">
+    <div class="panel-body">
+        <div class="detail-sources">
+          <div class="like-code mr5"><b class="ng-binding">Selection:</b>
+            <!-- ngInclude: 'selected-files-msg' --><span ng-include="&#39;selected-files-msg&#39;" class="ng-scope">
+  <span ng-show="temps.length == 1" class="ng-binding ng-scope ng-hide">
+    
+  </span>
+  <span ng-show="temps.length &gt; 1" class="ng-binding ng-scope ng-hide">
+    these 0 elements
+    <a href="https://files.000webhost.com/" class="label label-primary ng-binding" ng-click="showDetails = !showDetails">
+      + Details
+    </a>
+  </span>
+  <div ng-show="temps.length &gt; 1 &amp;&amp; showDetails" class="ng-scope ng-hide">
+    <ul class="selected-file-details">
+      <!-- ngRepeat: tempItem in temps -->
+    </ul>
+  </div>
+</span>
+          </div>
+        </div>
+        <div class="detail-sources">
+          <div class="like-code mr5 ng-binding">
+            <b class="ng-binding">Destination:</b> /
+          </div>
+          <a href="https://files.000webhost.com/" class="label label-primary ng-binding" ng-click="openNavigator(fileNavigator.currentPath)">
+            Change
+          </a>
+        </div>
+    </div>
+  </div>
+</div>
+              <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Cancel</button>
+              <button type="submit" class="btn btn-danger ng-binding" ng-disabled="apiMiddleware.apiHandler.inprocess">Move</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal animated fadeIn ng-scope" id="rename">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form ng-submit="rename()" class="ng-pristine ng-valid">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">×</span>
+                  <span class="sr-only ng-binding">Close</span>
+              </button>
+              <h4 class="modal-title ng-binding">Rename</h4>
+            </div>
+            <div class="modal-body">
+              <label class="radio ng-binding">Enter new name for <b class="ng-binding">false</b></label>
+              <input class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="singleSelection().tempModel.name" autofocus="autofocus">
+
+              <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Cancel</button>
+              <button type="submit" class="btn btn-danger ng-binding" ng-disabled="apiMiddleware.apiHandler.inprocess">Rename</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="copy">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form ng-submit="copy()" class="ng-pristine ng-valid">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">×</span>
+                  <span class="sr-only ng-binding">Close</span>
+              </button>
+              <h4 class="modal-title ng-binding">Copy file</h4>
+            </div>
+            <div class="modal-body">
+              <div ng-show="singleSelection()" class="ng-hide">
+                <label class="radio ng-binding">Enter new name for <b class="ng-binding"></b></label>
+                <input class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="singleSelection().tempModel.name" autofocus="autofocus">
+              </div>
+
+              <!-- ngInclude: --><div ng-include="" data-src="&#39;path-selector&#39;" class="clearfix ng-scope">
+  <div class="panel panel-primary mt10 mb0 ng-scope">
+    <div class="panel-body">
+        <div class="detail-sources">
+          <div class="like-code mr5"><b class="ng-binding">Selection:</b>
+            <!-- ngInclude: 'selected-files-msg' --><span ng-include="&#39;selected-files-msg&#39;" class="ng-scope">
+  <span ng-show="temps.length == 1" class="ng-binding ng-scope ng-hide">
+    
+  </span>
+  <span ng-show="temps.length &gt; 1" class="ng-binding ng-scope ng-hide">
+    these 0 elements
+    <a href="https://files.000webhost.com/" class="label label-primary ng-binding" ng-click="showDetails = !showDetails">
+      + Details
+    </a>
+  </span>
+  <div ng-show="temps.length &gt; 1 &amp;&amp; showDetails" class="ng-scope ng-hide">
+    <ul class="selected-file-details">
+      <!-- ngRepeat: tempItem in temps -->
+    </ul>
+  </div>
+</span>
+          </div>
+        </div>
+        <div class="detail-sources">
+          <div class="like-code mr5 ng-binding">
+            <b class="ng-binding">Destination:</b> /
+          </div>
+          <a href="https://files.000webhost.com/" class="label label-primary ng-binding" ng-click="openNavigator(fileNavigator.currentPath)">
+            Change
+          </a>
+        </div>
+    </div>
+  </div>
+</div>
+              <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Cancel</button>
+              <button type="submit" class="btn btn-danger ng-binding" ng-disabled="apiMiddleware.apiHandler.inprocess">Copy</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="compress">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form ng-submit="compress()" class="ng-pristine ng-valid">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">×</span>
+                  <span class="sr-only ng-binding">Close</span>
+              </button>
+              <h4 class="modal-title ng-binding">Compress</h4>
+            </div>
+            <div class="modal-body">
+              <div ng-show="apiMiddleware.apiHandler.asyncSuccess" class="ng-hide">
+                  <div class="label label-success error-msg ng-binding">Compression started in a background process</div>
+              </div>
+              <div ng-hide="apiMiddleware.apiHandler.asyncSuccess">
+                  <div ng-hide="config.allowedActions.compressChooseName" class="ng-binding ng-hide">
+                    Are you sure to compress <b class="ng-binding"></b> ?
+                  </div>
+                  <div ng-show="config.allowedActions.compressChooseName">
+                    <label class="radio ng-binding">
+                      Enter the file name for the compression of
+                      <!-- ngInclude: --><span ng-include="" data-src="&#39;selected-files-msg&#39;" class="ng-scope">
+  <span ng-show="temps.length == 1" class="ng-binding ng-scope ng-hide">
+    
+  </span>
+  <span ng-show="temps.length &gt; 1" class="ng-binding ng-scope ng-hide">
+    these 0 elements
+    <a href="https://files.000webhost.com/" class="label label-primary ng-binding" ng-click="showDetails = !showDetails">
+      + Details
+    </a>
+  </span>
+  <div ng-show="temps.length &gt; 1 &amp;&amp; showDetails" class="ng-scope ng-hide">
+    <ul class="selected-file-details">
+      <!-- ngRepeat: tempItem in temps -->
+    </ul>
+  </div>
+</span>
+                    </label>
+                      <input class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="temp.tempModel.name" autofocus="autofocus" style="width: 78%; display:inline-block">
+                      <select name="repeatSelect" id="repeatSelect" ng-model="temp.tempModel.compressExtension" style="width: 20%; display:inline-block" class="ng-pristine ng-untouched ng-valid ng-empty"><option value="? undefined:undefined ?"></option>
+                          <!-- ngRepeat: option in config.compresableFilePattern --><option ng-repeat="option in config.compresableFilePattern" value="zip" class="ng-binding ng-scope">
+                              .zip
+                          </option><!-- end ngRepeat: option in config.compresableFilePattern --><option ng-repeat="option in config.compresableFilePattern" value="tar" class="ng-binding ng-scope">
+                              .tar
+                          </option><!-- end ngRepeat: option in config.compresableFilePattern --><option ng-repeat="option in config.compresableFilePattern" value="tar.gz" class="ng-binding ng-scope">
+                              .tar.gz
+                          </option><!-- end ngRepeat: option in config.compresableFilePattern --><option ng-repeat="option in config.compresableFilePattern" value="tgz" class="ng-binding ng-scope">
+                              .tgz
+                          </option><!-- end ngRepeat: option in config.compresableFilePattern -->
+                      </select>
+                  </div>
+              </div>
+
+              <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+            </div>
+            <div class="modal-footer">
+              <div ng-show="apiMiddleware.apiHandler.asyncSuccess" class="ng-hide">
+                  <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Close</button>
+              </div>
+              <div ng-hide="apiMiddleware.apiHandler.asyncSuccess">
+                  <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Cancel</button>
+                  <button type="submit" class="btn btn-danger ng-binding" ng-disabled="apiMiddleware.apiHandler.inprocess">Compress</button>
+              </div>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="extract" ng-init="singleSelection().emptyName()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form ng-submit="extract()" class="ng-pristine ng-valid">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">×</span>
+                  <span class="sr-only ng-binding">Close</span>
+              </button>
+              <h4 class="modal-title ng-binding">Extract item</h4>
+            </div>
+            <div class="modal-body">
+              <div ng-show="apiMiddleware.apiHandler.asyncSuccess" class="ng-hide">
+                  <div class="label label-success error-msg ng-binding">Extraction completed</div>
+              </div>
+              <div ng-hide="apiMiddleware.apiHandler.asyncSuccess">
+                  <label class="radio ng-binding">Enter the folder name for the extraction of <b class="ng-binding"></b></label>
+                  <div class="modal-info__extraction ng-binding">Define . as your location, if you want to extract compressed file in current folder</div>
+                  <input class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="singleSelection().tempModel.extractionName" autofocus="autofocus">
+              </div>
+              <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="progress progress-striped active ng-hide" ng-show="apiMiddleware.apiHandler.inprocess">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    </div>
+                </div>
+              <div ng-show="apiMiddleware.apiHandler.asyncSuccess" class="ng-hide">
+                  <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Close</button>
+              </div>
+              <div ng-hide="apiMiddleware.apiHandler.asyncSuccess">
+                  <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Cancel</button>
+                  <button type="submit" class="btn btn-danger ng-binding" ng-disabled="apiMiddleware.apiHandler.inprocess">Extract</button>
+              </div>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="edit" ng-class="{&#39;modal-fullscreen&#39;: fullscreen}">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <form ng-submit="edit()" class="ng-pristine ng-valid">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">×</span>
+                  <span class="sr-only ng-binding">Close</span>
+              </button>
+              <button type="button" class="close fullscreen" ng-click="fullscreen=!fullscreen">
+                  <i class="glyphicon glyphicon-fullscreen"></i>
+                  <span class="sr-only ng-binding">Toggle fullscreen</span>
+              </button>
+              <h4 class="modal-title ng-binding">Edit file</h4>
+            </div>
+            <div class="modal-body">
+                <label class="radio bold ng-binding"></label>
+                <span class="label label-warning ng-binding ng-hide" ng-show="apiMiddleware.apiHandler.inprocess">Loading ...</span>
+                <div id="code-editor" ui-ace="{
+                    require: [&#39;ace/ext/language_tools&#39;,&#39;ace/ext/modelist&#39;],
+                      useWrapMode : true,
+                      showGutter: true,
+                      theme: codeEditor.theme,
+                      mode: codeEditor.mode}" ng-model="singleSelection().tempModel.content" ng-show="!apiMiddleware.apiHandler.inprocess" class="ng-pristine ng-untouched ng-valid ng-empty">
+                </div>
+                <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-default ng-binding" ng-show="config.allowedActions.edit" ng-disabled="apiMiddleware.apiHandler.inprocess">save &amp; close</button>
+              <button type="button" class="btn btn-danger ng-binding" ng-show="config.allowedActions.edit" ng-click="save()" ng-disabled="apiMiddleware.apiHandler.inprocess">save</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="newfolder">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form ng-submit="createFolder()" class="ng-pristine ng-valid">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">×</span>
+                  <span class="sr-only ng-binding">Close</span>
+              </button>
+              <h4 class="modal-title ng-binding">New folder</h4>
+            </div>
+            <div class="modal-body">
+              <label class="radio ng-binding">Folder name</label>
+              <input class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="singleSelection().tempModel.name" autofocus="autofocus">
+              <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Cancel</button>
+              <button type="submit" class="btn btn-danger ng-binding" ng-disabled="apiMiddleware.apiHandler.inprocess">Create</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="newfile" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form ng-submit="createFile()" class="ng-pristine ng-valid">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                        <span class="sr-only ng-binding">Close</span>
+                    </button>
+                    <h4 class="modal-title ng-binding">New File</h4>
+                </div>
+                <div class="modal-body">
+                    <label class="radio ng-binding">Name</label>
+                    <input class="form-control ng-pristine ng-valid ng-empty ng-touched" ng-model="temp.new_file_name" autofocus="autofocus">
+                    <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Cancel</button>
+                    <button type="submit" class="btn btn-danger ng-binding" ng-disabled="apiMiddleware.apiHandler.inprocess">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="uploadfiledialog" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form ng-submit="uploadFiles()" class="ng-pristine ng-valid ng-submitted">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">×</span>
+                  <span class="sr-only ng-binding">Close</span>
+              </button>
+              <h4 class="modal-title ng-binding">Upload files</h4>
+            </div>
+            <div class="modal-body">
+              <label class="radio ng-binding">
+                Files will be uploaded to
+                <b class="ng-binding">/</b>
+              </label>
+              <button class="btn btn-default btn-block ng-binding" type="button" ngf-select="$parent.addForUpload($files)" ngf-multiple="true">
+                Select files
+              </button>
+              
+              <div class="upload-list">
+                <div class="alert alert-warning ng-hide" ng-show="!!directoryWarning" ng-click="directoryWarning = false">Folder upload is not supported at the moment. Please compress your files, upload it as archive and extract.</div>
+                  <div class="alert alert-danger ng-hide" ng-show="fileUploadErrorMessage">
+                      <pre class="alert-pre ng-binding"><pre>                  </pre></pre></div>
+                <ul class="list-group">
+                    <!-- ngRepeat: (index, uploadFolder) in $parent.uploadFolderList -->
+                  <!-- ngRepeat: (index, uploadFile) in $parent.uploadFileList -->
+                    <!-- ngRepeat: (index, uploadFile) in $parent.filesToUpload -->
+                </ul>
+                  <div ng-show="apiMiddleware.apiHandler.inprocess || apiMiddleware.apiHandler.progress == 100" class="ng-hide">
+                      <em class="ng-binding">Uploading... 0%</em>
+                  <div class="progress active mb0">
+                      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+            </div>
+            <div class="modal-footer">
+              <div>
+                  <button type="button" class="btn btn-default ng-binding" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-danger ng-binding" ng-disabled="!$parent.uploadFileList.length || apiMiddleware.apiHandler.inprocess" disabled="disabled">Upload</button>
+              </div>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="changepermissions">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form ng-submit="changePermissions()" class="ng-pristine ng-valid">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span aria-hidden="true">×</span>
+                  <span class="sr-only ng-binding">Close</span>
+              </button>
+              <h4 class="modal-title ng-binding">Change permissions</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table mb0">
+                  <thead>
+                      <tr>
+                          <th class="ng-binding">Permissions</th>
+                          <th class="col-xs-1 text-center ng-binding">Read</th>
+                          <th class="col-xs-1 text-center ng-binding">Write</th>
+                          <th class="col-xs-1 text-center ng-binding">Exec</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <!-- ngRepeat: (permTypeKey, permTypeValue) in temp.tempModel.perms --><tr ng-repeat="(permTypeKey, permTypeValue) in temp.tempModel.perms" class="ng-scope">
+                          <td class="ng-binding">Owner</td>
+                          <!-- ngRepeat: (permKey, permValue) in permTypeValue --><td ng-repeat="(permKey, permValue) in permTypeValue" class="col-xs-1 text-center ng-scope" ng-click="main()">
+                              <label class="col-xs-12">
+                                <input type="checkbox" ng-model="temp.tempModel.perms[permTypeKey][permKey]" class="ng-pristine ng-untouched ng-valid ng-not-empty">
+                              </label>
+                          </td><!-- end ngRepeat: (permKey, permValue) in permTypeValue --><td ng-repeat="(permKey, permValue) in permTypeValue" class="col-xs-1 text-center ng-scope" ng-click="main()">
+                              <label class="col-xs-12">
+                                <input type="checkbox" ng-model="temp.tempModel.perms[permTypeKey][permKey]" class="ng-pristine ng-untouched ng-valid ng-not-empty">
+                              </label>
+                          </td><!-- end ngRepeat: (permKey, permValue) in permTypeValue --><td ng-repeat="(permKey, permValue) in permTypeValue" class="col-xs-1 text-center ng-scope" ng-click="main()">
+                              <label class="col-xs-12">
+                                <input type="checkbox" ng-model="temp.tempModel.perms[permTypeKey][permKey]" class="ng-pristine ng-untouched ng-valid ng-empty">
+                              </label>
+                          </td><!-- end ngRepeat: (permKey, permValue) in permTypeValue -->
+                      </tr><!-- end ngRepeat: (permTypeKey, permTypeValue) in temp.tempModel.perms --><tr ng-repeat="(permTypeKey, permTypeValue) in temp.tempModel.perms" class="ng-scope">
+                          <td class="ng-binding">Group</td>
+                          <!-- ngRepeat: (permKey, permValue) in permTypeValue --><td ng-repeat="(permKey, permValue) in permTypeValue" class="col-xs-1 text-center ng-scope" ng-click="main()">
+                              <label class="col-xs-12">
+                                <input type="checkbox" ng-model="temp.tempModel.perms[permTypeKey][permKey]" class="ng-pristine ng-untouched ng-valid ng-not-empty">
+                              </label>
+                          </td><!-- end ngRepeat: (permKey, permValue) in permTypeValue --><td ng-repeat="(permKey, permValue) in permTypeValue" class="col-xs-1 text-center ng-scope" ng-click="main()">
+                              <label class="col-xs-12">
+                                <input type="checkbox" ng-model="temp.tempModel.perms[permTypeKey][permKey]" class="ng-pristine ng-untouched ng-valid ng-empty">
+                              </label>
+                          </td><!-- end ngRepeat: (permKey, permValue) in permTypeValue --><td ng-repeat="(permKey, permValue) in permTypeValue" class="col-xs-1 text-center ng-scope" ng-click="main()">
+                              <label class="col-xs-12">
+                                <input type="checkbox" ng-model="temp.tempModel.perms[permTypeKey][permKey]" class="ng-pristine ng-untouched ng-valid ng-empty">
+                              </label>
+                          </td><!-- end ngRepeat: (permKey, permValue) in permTypeValue -->
+                      </tr><!-- end ngRepeat: (permTypeKey, permTypeValue) in temp.tempModel.perms --><tr ng-repeat="(permTypeKey, permTypeValue) in temp.tempModel.perms" class="ng-scope">
+                          <td class="ng-binding">Others</td>
+                          <!-- ngRepeat: (permKey, permValue) in permTypeValue --><td ng-repeat="(permKey, permValue) in permTypeValue" class="col-xs-1 text-center ng-scope" ng-click="main()">
+                              <label class="col-xs-12">
+                                <input type="checkbox" ng-model="temp.tempModel.perms[permTypeKey][permKey]" class="ng-pristine ng-untouched ng-valid ng-not-empty">
+                              </label>
+                          </td><!-- end ngRepeat: (permKey, permValue) in permTypeValue --><td ng-repeat="(permKey, permValue) in permTypeValue" class="col-xs-1 text-center ng-scope" ng-click="main()">
+                              <label class="col-xs-12">
+                                <input type="checkbox" ng-model="temp.tempModel.perms[permTypeKey][permKey]" class="ng-pristine ng-untouched ng-valid ng-empty">
+                              </label>
+                          </td><!-- end ngRepeat: (permKey, permValue) in permTypeValue --><td ng-repeat="(permKey, permValue) in permTypeValue" class="col-xs-1 text-center ng-scope" ng-click="main()">
+                              <label class="col-xs-12">
+                                <input type="checkbox" ng-model="temp.tempModel.perms[permTypeKey][permKey]" class="ng-pristine ng-untouched ng-valid ng-empty">
+                              </label>
+                          </td><!-- end ngRepeat: (permKey, permValue) in permTypeValue -->
+                      </tr><!-- end ngRepeat: (permTypeKey, permTypeValue) in temp.tempModel.perms -->
+                </tbody>
+              </table>
+              <div class="checkbox ng-hide" ng-show="config.enablePermissionsRecursive &amp;&amp; selectionHas(&#39;dir&#39;)">
+                <label class="ng-binding">
+                  <input type="checkbox" ng-model="temp.tempModel.recursive" class="ng-pristine ng-untouched ng-valid ng-empty"> Recursive
+                </label>
+              </div>
+              <div class="clearfix mt10">
+                  <span class="label label-primary pull-left ng-binding ng-hide" ng-hide="temp.multiple">
+                    Original: 
+                    -rw-r--r-- 
+                    (644)
+                  </span>
+                  <span class="label label-primary pull-right ng-binding">
+                    Changes: 
+                    -rw-r--r-- 
+                    (644)
+                  </span>
+              </div>
+              <!-- ngInclude: --><div ng-include="" data-src="&#39;error-bar&#39;" class="clearfix ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn ng-scope ng-hide" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span class="ng-binding"></span>
+  </div>
+</div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default ng-binding" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-danger ng-binding" ng-disabled="">Change</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal animated fadeIn ng-scope" id="selector" ng-controller="ModalFileManagerCtrl">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only ng-binding">Close</span>
+        </button>
+        <h4 class="modal-title ng-binding">Select the destination folder</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+            <!-- ngInclude: config.tplPath + '/current-folder-breadcrumb.html' --><div ng-include="config.tplPath + &#39;/current-folder-breadcrumb.html&#39;" class="ng-scope"><ol class="breadcrumb ng-scope">
+    <li>
+        <a href="https://files.000webhost.com/" ng-click="fileNavigator.goTo(-1)" class="ng-binding">
+            mykosova
+        </a>
+    </li>
+    <!-- ngRepeat: (key, dir) in fileNavigator.currentPath track by key -->
+</ol></div>
+            <!-- ngInclude: config.tplPath + '/main-table-modal.html' --><div ng-include="config.tplPath + &#39;/main-table-modal.html&#39;" class="ng-scope"><table class="table table-condensed table-modal-condensed mb0 ng-scope">
+    <thead>
+        <tr>
+            <th>
+                <a href="https://files.000webhost.com/" ng-click="order(&#39;model.name&#39;)" class="ng-binding">
+                    Name
+                    <span class="sortorder" ng-show="predicate[1] === &#39;model.name&#39;" ng-class="{reverse:reverse}"></span>
+                </a>
+            </th>
+            <th class="text-right"></th>
+        </tr>
+    </thead>
+    <tbody class="file-item">
+        <tr ng-show="fileNavigator.requesting" class="ng-hide">
+            <td colspan="2">
+                <!-- ngInclude: config.tplPath + '/spinner.html' --><div ng-include="config.tplPath + &#39;/spinner.html&#39;" class="ng-scope"><div class="spinner-wrapper col-xs-12 ng-scope">
+    <svg class="spinner-container" style="width:65px;height:65px" viewBox="0 0 44 44">
+        <circle class="path" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
+    </svg>
+</div></div>
+            </td>
+        </tr>
+        <tr ng-show="!fileNavigator.requesting &amp;&amp; !fileNavigator.listHasFolders() &amp;&amp; !fileNavigator.error">
+            <td class="ng-binding">
+                This folder does not contain any child folders...
+            </td>
+            <td class="text-right">
+                <button class="btn btn-sm btn-default ng-binding" ng-click="fileNavigator.upDir()">Go back</button>
+            </td>
+        </tr>
+        <tr ng-show="!fileNavigator.requesting &amp;&amp; fileNavigator.error" class="ng-hide">
+            <td colspan="2" class="ng-binding">
+                
+            </td>
+        </tr>
+        <!-- ngRepeat: item in fileNavigator.fileList | orderBy:predicate:reverse -->
+    </tbody>
+</table></div>
+            <hr>
+            <button class="btn btn-sm btn-default ng-binding" ng-click="selectCurrent()">
+                <i class="glyphicon"></i> Select this
+            </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" data-dismiss="modal" ng-disabled="apiMiddleware.apiHandler.inprocess">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/ng-template" id="path-selector" class="ng-scope">
+  <div class="panel panel-primary mt10 mb0">
+    <div class="panel-body">
+        <div class="detail-sources">
+          <div class="like-code mr5"><b>{{"selection" | translate}}:</b>
+            <span ng-include="'selected-files-msg'"></span>
+          </div>
+        </div>
+        <div class="detail-sources">
+          <div class="like-code mr5">
+            <b>{{"destination" | translate}}:</b> {{ getSelectedPath() }}
+          </div>
+          <a href="" class="label label-primary" ng-click="openNavigator(fileNavigator.currentPath)">
+            {{'change' | translate}}
+          </a>
+        </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="error-bar" class="ng-scope">
+  <div class="label label-danger error-msg pull-left animated fadeIn" ng-show="apiMiddleware.apiHandler.error">
+    <i class="glyphicon glyphicon-remove-circle"></i>
+    <span>{{apiMiddleware.apiHandler.error}}</span>
+  </div>
+</script>
+
+<script type="text/ng-template" id="selected-files-msg" class="ng-scope">
+  <span ng-show="temps.length == 1">
+    {{singleSelection().model.name}}
+  </span>
+  <span ng-show="temps.length > 1">
+    {{'these_elements' | translate:totalSelecteds()}}
+    <a href="" class="label label-primary" ng-click="showDetails = !showDetails">
+      {{showDetails ? '-' : '+'}} {{'details' | translate}}
+    </a>
+  </span>
+  <div ng-show="temps.length > 1 &amp;&amp; showDetails">
+    <ul class="selected-file-details">
+      <li ng-repeat="tempItem in temps">
+        <b>{{tempItem.model.name}}</b>
+      </li>
+    </ul>
+  </div>
+</script>
+</div>
+    <!-- ngInclude: config.tplPath + '/item-context-menu.html' --><div ng-include="config.tplPath + &#39;/item-context-menu.html&#39;" class="ng-scope"><div id="context-menu" class="dropdown clearfix animated fast fadeIn ng-scope" style="display: none;">
+    <!-- ngInclude: config.tplPath + '/action-meniu.html' --><ul class="dropdown-menu dropdown-right-click ng-scope ng-hide" role="menu" aria-labelledby="dropdownMenu" ng-show="temps.length" ng-include="config.tplPath + &#39;/action-meniu.html&#39;"><li class="btn-flat ng-scope ng-hide" ng-hide="! singleSelection() &amp;&amp; ! singleSelection().isFolder()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; smartClick(singleSelection())" class="disabled">
+        <i class="glyphicon glyphicon-folder-open"></i> <div class="ng-binding"> Open </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.pickCallback &amp;&amp; singleSelection() &amp;&amp; singleSelection().isSelectable()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; config.pickCallback(singleSelection().model)" class="disabled">
+        <i class="glyphicon glyphicon-hand-up"></i> <div class="ng-binding"> Select this </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.download &amp;&amp; !selectionHas(&#39;dir&#39;) &amp;&amp; !selectionHasSymlink() &amp;&amp; singleSelection()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; download()" class="disabled">
+        <i class="glyphicon glyphicon-cloud-download"></i> <div class="ng-binding"> Download </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.downloadMultiple &amp;&amp; !selectionHas(&#39;dir&#39;) &amp;&amp; !singleSelection()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; download()" class="disabled">
+        <i class="glyphicon glyphicon-cloud-download"></i> <div class="ng-binding"> Download as ZIP </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.preview &amp;&amp; singleSelection().isImage() &amp;&amp; singleSelection()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; openImagePreview()" class="disabled">
+        <i class="glyphicon glyphicon-picture"></i> <div class="ng-binding"> Preview </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="singleSelection() &amp;&amp; canOpenInNewTab() &amp;&amp; &#39;000webhost&#39; == config.theme">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; openInNewTab()" class="disabled">
+        <i class="glyphicon glyphicon-file"></i> <div class="ng-binding"> View </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.rename &amp;&amp; singleSelection()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modal(&#39;rename&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-edit"></i> <div class="ng-binding"> Rename </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope" ng-show="config.allowedActions.move">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modalWithPathSelector(&#39;move&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-arrow-right"></i> <div class="ng-binding"> Move </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope" ng-show="config.allowedActions.copy">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modalWithPathSelector(&#39;copy&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-log-out"></i> <div class="ng-binding"> Copy </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.edit &amp;&amp; singleSelection() &amp;&amp; singleSelection().isEditable()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; openEditItem()" class="disabled">
+        <i class="glyphicon glyphicon-pencil"></i> <div class="ng-binding"> Edit </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope" ng-show="config.allowedActions.changePermissions">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; selected() &amp;&amp; modal(&#39;changepermissions&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-lock"></i> <div class="ng-binding"> Permissions </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope" ng-show="config.allowedActions.compress">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modal(&#39;compress&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-compressed"></i> <div class="ng-binding"> Compress </div>
+    </a>
+</li>
+
+<li class="btn-flat ng-scope ng-hide" ng-show="config.allowedActions.extract &amp;&amp; singleSelection() &amp;&amp; singleSelection().isExtractable()">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modal(&#39;extract&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-export"></i> <div class="ng-binding"> Extract </div>
+    </a>
+</li>
+
+<!--<li class="btn-flat" class="divider" ng-show="config.allowedActions.remove"></li>-->
+
+<li class="btn-flat ng-scope" ng-show="config.allowedActions.remove">
+    <a href="https://files.000webhost.com/" tabindex="-1" ng-class="{&#39;disabled&#39; : !selected()}" ng-click="selected() &amp;&amp; modal(&#39;remove&#39;)" class="disabled">
+        <i class="glyphicon glyphicon-trash"></i> <div class="ng-binding"> Delete </div>
+    </a>
+</li>
+</ul>
+
+    <ul class="dropdown-menu dropdown-right-click" role="menu" aria-labelledby="dropdownMenu" ng-show="!temps.length">
+        <li role="presentation" ng-show="config.allowedActions.createFile" ng-click="modal(&#39;newfile&#39;) &amp;&amp; prepareNewFile()">
+            <a href="https://files.000webhost.com/" role="menuitem" tabindex="-1" class="ng-binding">
+                <i class="glyphicon glyphicon-file"></i> New File
+            </a>
+        </li>
+        <li ng-show="config.allowedActions.createFolder">
+            <a href="https://files.000webhost.com/" tabindex="-1" ng-click="modal(&#39;newfolder&#39;) &amp;&amp; prepareNewFolder()" class="ng-binding">
+                <i class="glyphicon glyphicon-plus"></i> New folder
+            </a>
+        </li>
+        <li ng-show="config.allowedActions.upload">
+            <a href="https://files.000webhost.com/" tabindex="-1" ng-click="modal(&#39;uploadfiledialog&#39;)" class="ng-binding">
+                <i class="glyphicon glyphicon-cloud-upload"></i> Upload files
+            </a>
+        </li>
+    </ul>
+</div></div>
+</div>
+</angular-filemanager><!-- end ngIf: user.status && user.loading == 0 -->
+
+    <div class="row login-page ng-hide" ng-hide="user.status">
+      <div class="col-md-4 col-md-offset-4">
+        <h3><img src="./000webhost File Manager_files/logo-colored.svg" class="logo" alt="logo" ng-show="&#39;000webhost&#39; == user.config.theme">File Manager</h3>
+
+        <div class="alert alert-warning ng-binding ng-hide" ng-show="user.login.error">Log in details are not correct.</div>
+        <!-- ngInclude: user.config.tplPath + '/spinner.html' --><div ng-show="user.loading &gt; 0" ng-include="user.config.tplPath + &#39;/spinner.html&#39;" class="ng-scope ng-hide"><div class="spinner-wrapper col-xs-12 ng-scope">
+    <svg class="spinner-container" style="width:65px;height:65px" viewBox="0 0 44 44">
+        <circle class="path" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
+    </svg>
+</div></div>
+        <form ng-submit="user.login.attempt()" ng-show="user.loading==0" class="ng-pristine ng-invalid ng-invalid-required">
+          <div class="form-group">
+            <label for="input-username">Username:</label>
+            <input id="input-username" type="text" ng-model="user.login.input.username" required="" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required">
+          </div>
+          <div class="form-group">
+            <label for="input-password">Password:</label>
+            <input id="input-password" type="password" ng-model="user.login.input.password" required="" class="form-control ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required">
+          </div>
+          <p class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg btn-login">Log In</button>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+      $(document).on('click', '#header-menu-button', function () {
+          $('#left-sidebar-container').toggleClass('toggle-left-sidebar');
+      });
+
+      $(window).on('resize', function () {
+          if ($(this).width() >= 768) {
+              $('#left-sidebar-container').removeClass('toggle-left-sidebar');
+          }
+      });
+  </script>
+
+
+
+<label tabindex="-1" style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height: 0px; border: none; margin: 0px; padding: 0px;">upload<input type="file" ngf-select="$parent.addForUpload($files)" ngf-multiple="true" multiple="multiple"></label></body></html>
