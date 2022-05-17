@@ -3,8 +3,7 @@
 *{
     margin: 0;
     padding: 0;
-    background-color: whitesmoke;
-    color: goldenrod;
+    background: whitesmoke;
     font-family: 'Ubuntu', sans-serif;
 }
 h4{
@@ -15,15 +14,13 @@ hr{
     color: rgb(35, 130, 193);
 }
 .header {
-    /* background-color: rgb(67, 164, 243); */
-    height: 10vh;
+    height: 100vh;
     text-align: center;
-    grid-column: 1/13;
 }
-.main{
+/* .main{
     height: 120vh;
     text-align: center;
-}
+} */
 .navbar-style{
     box-shadow: 0 5px 10px #efefef;
     text-transform: capitalize;
@@ -55,5 +52,4 @@ div.column{
 }
 .img-responsive{
     margin: 1%;
-    
 }
